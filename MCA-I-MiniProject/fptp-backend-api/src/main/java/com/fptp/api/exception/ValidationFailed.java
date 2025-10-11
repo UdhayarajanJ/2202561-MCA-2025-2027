@@ -1,7 +1,6 @@
 package com.fptp.api.exception;
 
 import com.fptp.api.models.ApiResponse;
-import com.fptp.api.models.ErrorResponse;
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

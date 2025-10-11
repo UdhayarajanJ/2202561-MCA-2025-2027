@@ -20,10 +20,15 @@ public class VehicleController {
     @Autowired
     private VehicleServices vehicleServices;
 
-    @GetMapping("/GetVehicleTypes")
+    @GetMapping("/GetVehicleTypes/{ownerId}")
     @Operation(summary = "Get all vehicle types")
-    public ResponseEntity<ApiResponse<List<VehicleTypes>>>  GetVehicleTypes() {
-        List<VehicleTypes> vehicleTypes = vehicleServices.GetVehcileTypes();
+    public ResponseEntity<ApiResponse<List<VehicleTypes>>>  GetVehicleTypes(@PathVariable String ownerId) {
+        if (ownerId == null || ownerId.isBlank()) {
+            ApiResponse<List<VehicleTypes>> response = new ApiResponse<List<VehicleTypes>>(false, "Owner id is mandatory", null);
+            return ResponseEntity.status(400).body(response);
+        }
+
+        List<VehicleTypes> vehicleTypes = vehicleServices.GetVehcileTypes(ownerId);
 
         if (vehicleTypes == null || vehicleTypes.isEmpty()) {
             // Return 404 Not Found

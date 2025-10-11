@@ -12,8 +12,8 @@ public class VehicleServices{
     @Autowired
     private VehicleRepository vehicleRepository;
 
-    public List<VehicleTypes> GetVehcileTypes() {
-        return vehicleRepository.GetVehcileTypes();
+    public List<VehicleTypes> GetVehcileTypes(String ownerId) {
+        return vehicleRepository.GetVehcileTypes(ownerId);
     }
 
     public CommonResult SaveUpdateVehicleTypes(VehicleTypes vehicleTypes) {
