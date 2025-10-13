@@ -1,1 +1,51 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Roboto", sans-serif;
+    font-style: normal;
+}
+
+/* Make all PrimeNG column filter inputs fill full width */
+.p-column-filter input,
+.p-column-filter .p-inputtext,
+.p-column-filter .p-inputnumber-input,
+.p-column-filter .p-calendar input {
+    width: 100% !important;
+    box-sizing: border-box;
+}
+
+/* styles.scss or component style */
+.no-icon-toast .p-toast-message-icon {
+    display: none !important;
+}
+
+.no-icon-toast .p-toast-message {
+    padding-left: 1rem;
+    /* optional spacing adjustment */
+}
+
+.p-toast-detail {
+    font-size: 1.4rem !important;
+}
+
+.btn-common {
+    background-color: #fd7e14 !important;
+    border-color: #fd7e14 !important;
+    color: white !important;
+}
+
+.error-label {
+    color: red;
+}
+
+.error-form-element {
+    border-color: red !important;
+}
+
+.p-datepicker-input{
+    width: 100% !important;
+}

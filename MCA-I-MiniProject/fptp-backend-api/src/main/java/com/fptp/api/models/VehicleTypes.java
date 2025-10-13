@@ -5,7 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Data
 @Getter
@@ -29,14 +30,12 @@ public class VehicleTypes {
 
     private boolean IsEnabled;
 
-    private Date CreatedDate;
+    private LocalDateTime CreatedDate;
 
-    private Date ModifiedDate;
+    private LocalDateTime ModifiedDate;
 
     private boolean IsDeleted;
 
     @NotBlank(message = "Owner Id is required")
     private String OwnerId;
-
-
 }

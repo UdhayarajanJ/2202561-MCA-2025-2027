@@ -1,0 +1,47 @@
+.side-nav-icon-img {
+    height: 30px;
+    width: 30px;
+    margin-left: 2rem;
+    cursor: pointer;
+}
+
+.app-logo{
+    font-size: 1.5rem;
+    background-color: #fd7e14;
+    padding: 1rem 7rem;
+    border-radius: .5rem;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    margin-left: 30px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.header-wrapper {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    padding: 1rem;
+    border-radius: .5rem;
+    width: 100%;
+}
+
+.user-profile-corner {
+    margin-right: 2rem;
+}
+
+.logo-image-user {
+    margin: auto 1rem;
+    background-color: #fd7e14;
+    height: 100%;
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+    border-radius: 100%;
+    .user-image-text {
+        margin-top: .2rem;
+        font-size: 1.5rem;
+    }
+}
+.user-info-email{
+    .user-name-view{
+        font-size: 1.3rem;
+    }
+}

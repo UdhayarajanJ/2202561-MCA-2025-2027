@@ -1,0 +1,36 @@
+.side-nav-img {
+    height: 30px;
+    width: 30px;
+}
+
+.menu-box {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    padding: 1.5rem 1rem;
+    width: 28%;
+    border-radius: 0 0 15px 15px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.menu-alignment {
+    text-decoration: none;
+    font-size: 1.8rem;
+    color: #000;
+    padding: 0rem 1rem;
+    height: 100%;
+
+    span {
+        margin-left: 15px;
+    }
+}
+
+.active {
+    border-left: 4px solid #fd7e14;
+    border-right: 4px solid #fd7e14;
+
+    img {
+        background: #fff;
+        fill: #fff;
+        stroke: #fff;
+    }
+}
