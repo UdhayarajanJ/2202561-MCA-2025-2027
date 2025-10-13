@@ -42,10 +42,29 @@
     color: red;
 }
 
+.success-label {
+    color: green;
+}
+
 .error-form-element {
     border-color: red !important;
 }
 
 .p-datepicker-input{
     width: 100% !important;
+}
+
+.p-select{
+    width: 100% !important;
+}
+.p-toggleswitch.p-toggleswitch-checked .p-toggleswitch-slider{
+    background: #fd7e14 !important;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.uppercase::placeholder {
+  text-transform: none;
 }

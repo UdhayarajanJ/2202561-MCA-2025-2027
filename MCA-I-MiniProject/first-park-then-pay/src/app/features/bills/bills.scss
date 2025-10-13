@@ -1,0 +1,43 @@
+.register-vehicle-wrapper {
+    margin: 3rem 1.8rem;
+}
+
+.side-nav-icon-img,.side-nav-clear-img {
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+    margin: 0 .4rem;
+}
+
+
+.action-wrapper {
+    background-color: #fd7e14;
+    padding: .7rem;
+    border-radius: .5rem;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    cursor: pointer;
+    border-color: #fd7e14;
+}
+
+.action-wrapper-clear{
+    background-color: #000;
+}
+
+.action-area{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.add-vehicle{
+    margin-bottom:1.5rem;
+    color: #fff;
+    font-size: 1.4rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+
+.form-custom-fields{
+    margin: 1rem 0;;
+}

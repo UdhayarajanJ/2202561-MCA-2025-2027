@@ -27,12 +27,16 @@ export class VehicleService {
       filterName,
       ownerId
     };
-    return this.apiService.get("api/Vehicle/GetVehicleTableRecords", params)
+    return this.apiService.get("api/Vehicle/GetVehicleTableRecords", params);
   }
 
   public saveUpdateVehicleTypes(
     vehicleTypes: VehicleTypes
   ): Observable<CommonAPIResponse<Confirmationresult>> {
-    return this.apiService.post("api/Vehicle/SaveUpdateVehicleTypes", vehicleTypes)
+    return this.apiService.post("api/Vehicle/SaveUpdateVehicleTypes", vehicleTypes);
+  }
+
+  public getActiveVehicle(ownerId:string): Observable<CommonAPIResponse<VehicleTypes[]>> {
+    return this.apiService.get(`api/Vehicle/GetVehicleTypes/${ownerId}`);
   }
 }

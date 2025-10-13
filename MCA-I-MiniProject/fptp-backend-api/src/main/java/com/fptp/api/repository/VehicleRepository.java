@@ -11,9 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Types;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +30,7 @@ public class VehicleRepository implements IVehicleContracts {
 
         return jdbcTemplate.query(
                 sql,
-                new Object[]{ ownerId },
+                new Object[]{ownerId},
                 (rs, rowNum) -> new VehicleTypes(
                         rs.getInt("VehicleId"),
                         rs.getString("Name"),

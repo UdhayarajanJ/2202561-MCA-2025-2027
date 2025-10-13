@@ -1,1 +1,138 @@
-<p>bills works!</p>
+<div class="bill-wrapper">
+    <div class="register-vehicle-wrapper">
+        <form class="row" [formGroup]="parkingVehicleForms" [autocomplete]="'off'" (ngSubmit)="onRegisterVehicle()">
+            <div class="col-11">
+                <div class="row">
+                    <div class="col-md-6 col-lg-3 col-12">
+                        <div class="form-custom-fields">
+                            <h6 for="vehicleNo" class="font-medium mb-1">* Vehicle No.</h6>
+                            <input pInputText id="vehicleNo" placeholder="Enter vehicle number" class="w-100"
+                                formControlName="vehicleNo" (input)="checkVehicleStatus()"
+                                [ngClass]="(parkingVehicleForms.get('vehicleNo')?.invalid && parkingVehicleForms.get('vehicleNo')?.touched) || (vehicleStatus && vehicleStatus.parkingStatus)?'error-form-element uppercase':'uppercase'" />
+                            @if(parkingVehicleForms.get('vehicleNo')?.invalid &&
+                            parkingVehicleForms.get('vehicleNo')?.touched){
+                            <small class="error-label">Invalid vehicle number. (eg MH14LK0511)</small>
+                            }
+                            @if(parkingVehicleForms.get('vehicleNo')?.valid && vehicleStatus){
+                            <small
+                                [ngClass]="vehicleStatus && vehicleStatus.parkingStatus?'error-label':'success-label'">{{vehicleStatus.message}}</small>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 col-12">
+                        <div class="form-custom-fields">
+                            <h6 for="name" class="font-medium mb-1">Owner Name (optional)</h6>
+                            <input pInputText id="name" placeholder="Enter owner name" class="w-100"
+                                formControlName="name" />
+
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 col-12">
+                        <div class="form-custom-fields">
+                            <h6 for="mobileNo" class="font-medium mb-1">Mobile Number (optional)</h6>
+                            <input pInputText id="mobileNo" placeholder="Enter mobile number" class="w-100"
+                                formControlName="mobileNo" />
+
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 col-12">
+                        <div class="form-custom-fields">
+                            <h6 for="vehicleTypeId" class="font-medium mb-1">* Vehicle type</h6>
+                            <p-select formControlName="vehicleTypeId" [options]="vehicleTypes" optionLabel="name"
+                                optionValue="vehicleId" placeholder="- Select -" [showClear]="true"
+                                (onChange)="bindVehicleInformation($event)"></p-select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 col-12">
+                        <div class="form-custom-fields">
+                            <h6 for="checkIn" class="font-medium mb-1">Check In</h6>
+                            @if (parkingVehicleForms.get('vehicleTypeId')?.value !== null &&
+                            parkingVehicleForms.get('vehicleTypeId')?.value!=0 && slotAvailable) {
+                            <h6>{{ parkingVehicleForms.get('checkIn')?.value | date:dateFormat}}</h6>
+                            }
+                            @else {
+                            <small class="error-label"> - </small>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 col-12">
+                        <div class="form-custom-fields">
+                            <h6 for="blockName" class="font-medium mb-1">Block Name</h6>
+                            @if (parkingVehicleForms.get('vehicleTypeId')?.value !== null &&
+                            parkingVehicleForms.get('vehicleTypeId')?.value!=0 && slotAvailable) {
+                            <h6>{{ parkingVehicleForms.get('blockName')?.value }}</h6>
+                            }
+                            @else {
+                            <small class="error-label"> Select vehicle type then Check whether available slots are not
+                                ?</small>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 col-12">
+                        <div class="form-custom-fields">
+                            <h6 for="slotNo" class="font-medium mb-1">Slot No.</h6>
+                            @if (parkingVehicleForms.get('vehicleTypeId')?.value !== null &&
+                            parkingVehicleForms.get('vehicleTypeId')?.value!=0 && slotAvailable) {
+                            <h6>{{ parkingVehicleForms.get('slotNo')?.value }}</h6>
+                            }
+                            @else {
+                            <small class="error-label"> Select vehicle type then Check whether available slots are not
+                                ?</small>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 col-12">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-custom-fields">
+                                    <h6 for="hourlyCharge" class="font-medium mb-1">Per/Hour Charge.</h6>
+                                    @if (parkingVehicleForms.get('vehicleTypeId')?.value !== null &&
+                                    parkingVehicleForms.get('vehicleTypeId')?.value!=0 && slotAvailable) {
+                                    <h6>{{ parkingVehicleForms.get('perHourCharge')?.value |
+                                        currency:'INR':'symbol':'1.2-2'}}</h6>
+                                    }
+                                    @else {
+                                    <small class="error-label"> Select vehicle type.</small>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-custom-fields">
+                                    <h6 for="hourlyCharge" class="font-medium mb-1 d-flex align-items-center">
+                                        <p-toggleswitch formControlName="isSubmittedKey" /><span class="mx-2"> Is key
+                                            submitted ?</span>
+                                    </h6>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <div class="row">
+                    <div class="action-area add-vehicle">
+                        <button class="action-wrapper w-100" type="submit"
+                            [disabled]="!slotAvailable || (vehicleStatus && vehicleStatus.parkingStatus)">
+                            <img src="icons/add-square-svgrepo-com.svg" alt="side-nav-icon" class="side-nav-icon-img">
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="action-area add-vehicle">
+                        <button class="action-wrapper action-wrapper-clear w-100" type="button"
+                            (click)="defaultFormLoad()">
+                            <img src="icons/clear-fill-svgrepo-com.svg" alt="side-nav-icon" class="side-nav-clear-img">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card flex justify-center gap-2">
+    <p-toast />
+    <p-confirmdialog />
+</div>
+<app-loader [showLoader]="showLoader"></app-loader>
