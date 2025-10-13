@@ -1,1 +1,140 @@
-<p>vehicles works!</p>
+<div class="vehicle-wrapper">
+    <div class="table-wrapper">
+        <div class="row">
+            <div class="col-1 offset-11">
+                <div class="action-area add-vehicle">
+                    <span class="action-wrapper w-100" (click)="addVehicleTypes()">
+                        <img src="icons/add-square-svgrepo-com.svg" alt="side-nav-icon" class="side-nav-icon-img"> Add
+                    </span>
+                </div>
+            </div>
+        </div>
+        @if(vehiclePagination.data!=[]){
+        <p-table [value]="vehiclePagination.data" showGridlines [rowsPerPageOptions]="[5, 10, 20]" [paginator]="true"
+            [rows]="pageSize" [first]="firstIndexTable_Vehicle_Types" [showCurrentPageReport]="true"
+            [totalRecords]="vehiclePagination.totalRecords"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            (onPage)="onPageChange($event)" [lazy]="true" (onFilter)="onFilterTableRecord($event)">
+            <ng-template #header>
+                <tr>
+                    <th>SNo.</th>
+                    <th>Name</th>
+                    <th>Per/Hour</th>
+                    <th>BlockName</th>
+                    <th>Date</th>
+                    <th>Slots</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>
+                        <input pInputText id="name" type="text" placeholder="Filter by name" class="w-100"
+                            autocomplete="off" (input)="onFilterChange('name', $event.target.value)" />
+                    </th>
+                    <th> </th>
+                    <th> </th>
+                    <th>
+                        <p-datepicker style="width: 100% !important;" placeholder="Filter by date" dateFormat="dd-mm-yy"
+                            [showButtonBar]="true"
+                            [showIcon]="true"
+                            [showClear]="true"
+                            (onSelect)="onFilterChange('modifiedDate', $event)"
+                            (onClearClick)="onFilterChange('modifiedDate', null)" 
+                            (onClear)="onFilterChange('modifiedDate', null)"/>
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-vehicle let-rowIndex="rowIndex">
+                <tr>
+                    <td>{{ rowIndex + 1}}</td>
+                    <td>{{ vehicle.name }}</td>
+                    <td>{{ vehicle.perHourCharge| currency:'INR':'symbol':'1.2-2' }}</td>
+                    <td>{{ vehicle.blockName }}</td>
+                    <td>{{ vehicle.modifiedDate | date:dateFormat}}</td>
+                    <td>{{ vehicle.totalSlots }}</td>
+                    <td><p-toggleswitch [(ngModel)]="vehicle.isEnabled"
+                            (onChange)="changeStatusOfVehicleTypes(vehicle,$event)" /></td>
+                    <td class="action-area">
+                        <span class="action-wrapper" (click)="updateVehicleTypes(vehicle)">
+                            <img src="icons/edit-plant-svgrepo-com.svg" alt="side-nav-icon" class="side-nav-icon-img">
+                        </span>
+                        <span class="action-wrapper" (click)="deleteVehicleTypes(vehicle)">
+                            <img src="icons/delete-svgrepo-com.svg" alt="side-nav-icon" class="side-nav-icon-img">
+                        </span>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="8" class="text-center py-4 text-gray-500">
+                        No records found
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        }
+    </div>
+</div>
+<div class="card">
+    <p-dialog [header]="buttonText +' Vehicle'" [modal]="true" [(visible)]="saveUpdatePopupVisible" position="right"
+        [style]="{ width: '35rem' }">
+        <form class="flex flex-col gap-4" [formGroup]="vehicleTypesGroup" (ngSubmit)="onSubmitVehicleTypes()">
+            <div class="form-custom-fields">
+                <h6 for="name" class="font-medium mb-1">* Name</h6>
+                <input pInputText id="name" placeholder="Enter vehicle name" class="w-100" formControlName="name"
+                    [ngClass]="vehicleTypesGroup.get('name')?.invalid && vehicleTypesGroup.get('name')?.touched?'error-form-element':''" />
+                @if(vehicleTypesGroup.get('name')?.invalid && vehicleTypesGroup.get('name')?.touched){
+                <small class="error-label">Name is required (min 2 characters)</small>
+                }
+
+            </div>
+
+            <div class="form-custom-fields">
+                <h6 for="name" class="font-medium mb-1">* Per/Hour</h6>
+                <input pInputText id="perHour" type="number" placeholder="Enter charge (₹)" min="1" class="w-100"
+                    formControlName="perHourCharge"
+                    [ngClass]="vehicleTypesGroup.get('perHourCharge')?.invalid && vehicleTypesGroup.get('perHourCharge')?.touched?'error-form-element':''" />
+                @if(vehicleTypesGroup.get('perHourCharge')?.invalid && vehicleTypesGroup.get('perHourCharge')?.touched){
+                <small class="error-label">Enter a valid charge (≥ 1)</small>
+                }
+            </div>
+
+            <div class="form-custom-fields">
+                <h6 for="name" class="font-medium mb-1">* Enable</h6>
+                <p-toggleswitch id="enabled" formControlName="isEnabled" />
+            </div>
+
+            <div class="form-custom-fields">
+                <h6 for="name" class="font-medium mb-1">* Block Name</h6>
+                <input pInputText id="name" placeholder="Enter block name" class="w-100" formControlName="blockName"
+                    [ngClass]="vehicleTypesGroup.get('blockName')?.invalid && vehicleTypesGroup.get('blockName')?.touched?'error-form-element':''" />
+                @if(vehicleTypesGroup.get('blockName')?.invalid && vehicleTypesGroup.get('blockName')?.touched){
+                <small class="error-label">Block name is required</small>
+                }
+            </div>
+
+            <div class="form-custom-fields">
+                <h6 for="name" class="font-medium mb-1">* Total Slots</h6>
+                <input pInputText id="perHour" type="number" placeholder="Enter available slots" min="1" class="w-100"
+                    formControlName="totalSlots"
+                    [ngClass]="vehicleTypesGroup.get('totalSlots')?.invalid && vehicleTypesGroup.get('totalSlots')?.touched?'error-form-element':''" />
+                @if(vehicleTypesGroup.get('totalSlots')?.invalid && vehicleTypesGroup.get('totalSlots')?.touched){
+                <small class="error-label">Enter a valid number of slots (≥ 1)</small>
+                }
+            </div>
+            <div class="d-flex justify-content-center custom-form-submission">
+                <p-button label="Cancel" severity="secondary" (onClick)="saveUpdatePopupVisible = false" />
+                <p-button [label]="buttonText" type="submit" styleClass="btn-common" />
+            </div>
+        </form>
+    </p-dialog>
+</div>
+<div class="card flex justify-center gap-2">
+    <p-toast />
+    <p-confirmdialog />
+</div>
+<app-loader [showLoader]="showLoader"></app-loader>
