@@ -17,10 +17,18 @@ public interface IParkingVehicleContracts {
             String ownerId,
             String filterVehicleNo,
             Boolean filterIsPaid,
-            LocalDateTime filterDate,
+            LocalDateTime filterCheckInDate,
+            LocalDateTime filterCheckOutDate,
             String filterMobileNo,
             String filterName,
             Integer filterVehicleId,
             Boolean filterIsSubmittedKey,
             String filterPaidThrow);
+
+    CommonResult DeleteRegisterationVehicle(int parkingId, String ownerId);
+
+    ParkingVehicle GetTotalChargeOfVehicle(int parkingId, String ownerId);
+
+    CommonResult PaidVehicleCharge(ParkingVehicle parkingVehicle);
+
 }

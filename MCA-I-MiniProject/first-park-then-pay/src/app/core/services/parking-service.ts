@@ -52,7 +52,8 @@ export class ParkingService {
       ownerId: filterObject.ownerId,
       filterVehicleNo: filterObject.filterVehicleNo,
       filterIsPaid: filterObject.filterIsPaid,
-      filterDate: filterObject.filterDate,
+      filterCheckInDate: filterObject.filterCheckInDate,
+      filterCheckOutDate:filterObject.filterCheckOutDate,
       filterMobileNo: filterObject.filterMobileNo,
       filterName: filterObject.filterName,
       filterVehicleId: filterObject.filterVehicleId,
@@ -61,4 +62,33 @@ export class ParkingService {
     };
     return this.apiService.get("api/parking/GetParkingVehicleTableRecords", params);
   }
+
+  public deleteRegisterationVehicle(
+    parkingId: number,
+    ownerId: string
+  ): Observable<CommonAPIResponse<Vehiclestatus>> {
+    const params: Record<string, any> = {
+      parkingId,
+      ownerId
+    };
+    return this.apiService.delete("api/parking/DeleteRegisterationVehicle", params);
+  }
+
+  public getTotalChargeOfVehicle(
+    parkingId: number,
+    ownerId: string
+  ): Observable<CommonAPIResponse<Parkingvehicle>> {
+    const params: Record<string, any> = {
+      parkingId,
+      ownerId
+    };
+    return this.apiService.get("api/parking/GetTotalChargeOfVehicle", params);
+  }
+
+  public paidVehicleCharge(
+    parkingVehicle: Parkingvehicle
+  ): Observable<CommonAPIResponse<Confirmationresult>> {
+    return this.apiService.put("api/parking/PaidVehicleCharge", parkingVehicle);
+  }
+
 }

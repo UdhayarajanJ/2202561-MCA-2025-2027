@@ -73,19 +73,6 @@ public class ParkingController {
         return ResponseEntity.ok(response);
     }
 
-    /*
-    *           int pageNo,
-            int pageSize,
-            String ownerId,
-            String filterVehicleNo,
-            Boolean filterIsPaid,
-            LocalDateTime filterDate,
-            String filterMobileNo,
-            String filterName,
-            int filterVehicleId,
-            Boolean filterIsSubmittedKey,
-            String filterPaidThrow)
-    * */
     @GetMapping("/GetParkingVehicleTableRecords")
     @Operation(summary = "Get a parking vehicle type table records")
     public ResponseEntity<ApiResponse<PaginationResult<ParkingVehicle>>> GetParkingVehicleTableRecords(
@@ -94,7 +81,8 @@ public class ParkingController {
             @RequestParam String ownerId,
             @RequestParam(required = false) String filterVehicleNo,
             @RequestParam(required = false) Boolean filterIsPaid,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss") LocalDateTime filterDate,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss") LocalDateTime filterCheckInDate,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss") LocalDateTime filterCheckOutDate,
             @RequestParam(required = false) String filterMobileNo,
             @RequestParam(required = false) String filterName,
             @RequestParam(required = false) Integer filterVehicleId,
@@ -113,7 +101,8 @@ public class ParkingController {
                 ownerId,
                 filterVehicleNo,
                 filterIsPaid,
-                filterDate,
+                filterCheckInDate,
+                filterCheckOutDate,
                 filterMobileNo,
                 filterName,
                 filterVehicleId,
@@ -129,5 +118,31 @@ public class ParkingController {
         // Return 200 OK with data
         ApiResponse<PaginationResult<ParkingVehicle>> response = new ApiResponse<PaginationResult<ParkingVehicle>>(true, "Vehicle types fetched successfully", paginationResult);
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/DeleteRegisterationVehicle")
+    @Operation(summary = "Delete registered vehicle details")
+    public ResponseEntity<ApiResponse<CommonResult>> DeleteRegisterationVehicle(
+            @RequestParam int parkingId,
+            @RequestParam String ownerId) {
+        CommonResult result = parkingVehicleServices.DeleteRegisterationVehicle(parkingId,ownerId);
+        return ResponseEntity.ok(new ApiResponse<>(true, result.getMessage(), result));
+    }
+    
+    @GetMapping("/GetTotalChargeOfVehicle")
+    @Operation(summary = "Get total charges of vehicle")
+    public ResponseEntity<ApiResponse<ParkingVehicle>> GetTotalChargeOfVehicle(
+            @RequestParam int parkingId,
+            @RequestParam String ownerId) {
+        ParkingVehicle result = parkingVehicleServices.GetTotalChargeOfVehicle(parkingId,ownerId);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Parking charges are prepared.", result));
+    }
+
+    @PutMapping("/PaidVehicleCharge")
+    @Operation(summary = "Paid vehicle charges")
+    public ResponseEntity<ApiResponse<CommonResult>> PaidVehicleCharge(
+            @Valid @RequestBody ParkingVehicle parkingVehicle) {
+        CommonResult result = parkingVehicleServices.PaidVehicleCharge(parkingVehicle);
+        return ResponseEntity.ok(new ApiResponse<>(true, result.getMessage(), result));
     }
 }

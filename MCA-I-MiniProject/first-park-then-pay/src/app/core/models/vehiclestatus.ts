@@ -3,5 +3,6 @@ export interface Vehiclestatus {
     name:string,
     mobileNo:string,
     message:string,
-    vehicleNo:string
+    vehicleNo:string,
+    vehicleTypeId:number
 }

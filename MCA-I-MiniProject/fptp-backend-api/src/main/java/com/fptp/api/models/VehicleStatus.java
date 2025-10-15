@@ -15,4 +15,5 @@ public class VehicleStatus {
     private String Message;
     private String MobileNo;
     private String Name;
+    private Integer VehicleTypeId;
 }

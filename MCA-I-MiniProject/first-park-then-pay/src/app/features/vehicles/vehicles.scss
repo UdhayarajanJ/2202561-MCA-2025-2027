@@ -9,6 +9,14 @@
     margin: 0 .4rem;
 }
 
+.side-action-icon-img {
+    height: 25px;
+    width: 25px;
+    cursor: pointer;
+    margin: 0 .4rem;
+}
+
+
 .action-wrapper {
     background-color: #fd7e14;
     padding: .7rem;
@@ -16,23 +24,25 @@
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
-.action-area{
+.action-area {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
 }
 
-.add-vehicle{
-    margin-bottom:1.5rem;
+.add-vehicle {
+    margin-bottom: 1.5rem;
     color: #fff;
     font-size: 1.4rem;
     text-align: center;
     font-weight: bold;
 }
 
-.form-custom-fields{
-    margin: 1rem 0;;
+.form-custom-fields {
+    margin: 1rem 0;
+    ;
 }
-.custom-form-submission{
+
+.custom-form-submission {
     gap: 2rem;
 }

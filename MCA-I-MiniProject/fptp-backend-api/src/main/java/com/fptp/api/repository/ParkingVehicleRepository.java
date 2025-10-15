@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Time;
 import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -70,7 +71,8 @@ public class ParkingVehicleRepository implements IParkingVehicleContracts {
                         rs.getString("VehicleNo"),
                         rs.getString("Message"),
                         rs.getString("MobileNo"),
-                        rs.getString("Name")
+                        rs.getString("Name"),
+                        rs.getInt("VehicleTypeId")
                 )
         );
     }
@@ -82,7 +84,8 @@ public class ParkingVehicleRepository implements IParkingVehicleContracts {
             String ownerId,
             String filterVehicleNo,
             Boolean filterIsPaid,
-            LocalDateTime filterDate,
+            LocalDateTime filterCheckInDate,
+            LocalDateTime filterCheckOutDate,
             String filterMobileNo,
             String filterName,
             Integer filterVehicleId,
@@ -98,6 +101,7 @@ public class ParkingVehicleRepository implements IParkingVehicleContracts {
                         new SqlParameter("p_FilterVehicleNo", Types.VARCHAR),
                         new SqlParameter("p_FilterIsPaid", Types.BIT),
                         new SqlParameter("p_FilterCheckInDate", Types.TIMESTAMP),
+                        new SqlParameter("p_FilterCheckOutDate", Types.TIMESTAMP),
                         new SqlParameter("p_FilterMobileNumber", Types.VARCHAR),
                         new SqlParameter("p_FilterName", Types.VARCHAR),
                         new SqlParameter("p_FilterVehicleId", Types.INTEGER),
@@ -113,7 +117,7 @@ public class ParkingVehicleRepository implements IParkingVehicleContracts {
                     v.setVehicleNo(rs.getString("VehicleNo"));
                     v.setCheckIn(rs.getTimestamp("CheckIn").toLocalDateTime());
                     v.setCheckOut(rs.getTimestamp("CheckOut") != null ? rs.getTimestamp("CheckOut").toLocalDateTime() : null);
-                    v.setTotalHours(rs.getTimestamp("TotalHours") != null ? rs.getTimestamp("TotalHours").toLocalDateTime().toLocalTime() : null);
+                    v.setTotalHours(rs.getString("TotalHours"));
                     v.setVehicleTypeId(rs.getInt("VehicleTypeId"));
                     v.setPerHourCharge(rs.getDouble("PerHourCharge"));
                     v.setTransactionId(rs.getString("TransactionId"));
@@ -137,7 +141,8 @@ public class ParkingVehicleRepository implements IParkingVehicleContracts {
         inParams.put("p_OwnerId", ownerId);
         inParams.put("p_FilterVehicleNo", filterVehicleNo);
         inParams.put("p_FilterIsPaid", filterIsPaid);
-        inParams.put("p_FilterCheckInDate", filterDate);
+        inParams.put("p_FilterCheckInDate", filterCheckInDate);
+        inParams.put("p_FilterCheckOutDate", filterCheckOutDate);
         inParams.put("p_FilterMobileNumber", filterMobileNo);
         inParams.put("p_FilterName", filterName);
         inParams.put("p_FilterVehicleId", filterVehicleId);
@@ -153,4 +158,57 @@ public class ParkingVehicleRepository implements IParkingVehicleContracts {
         List<ParkingVehicle> items = (List<ParkingVehicle>) out.get("parkingVehicle");
         return new PaginationResult<>(totalRecords, items);
     }
+
+    @Override
+    public CommonResult DeleteRegisterationVehicle(int parkingId, String ownerId) {
+        String sql = "CALL usp_DeleteParkingVehicle(?, ?)";
+        return jdbcTemplate.queryForObject(
+                sql,
+                new Object[]{parkingId, ownerId},
+                (rs, rowNum) -> new CommonResult(
+                        rs.getInt("Result"),
+                        rs.getString("Message")
+                )
+        );
+    }
+
+    @Override
+    public ParkingVehicle GetTotalChargeOfVehicle(int parkingId, String ownerId) {
+        String sql = "CALL usp_GetTotalChargeOfParking(?, ?)";
+        return jdbcTemplate.queryForObject(
+                sql,
+                new Object[]{parkingId, ownerId},
+                (rs, rowNum) -> {
+                    ParkingVehicle vehicle = new ParkingVehicle();
+                    vehicle.setVehicleNo(rs.getString("VehicleNo"));
+                    vehicle.setParkingId(rs.getInt("ParkingId"));
+                    vehicle.setTotalCharge(rs.getDouble("TotalCharge"));
+                    vehicle.setPerHourCharge(rs.getDouble("PerHourCharge"));
+                    vehicle.setTotalHours(rs.getString("TotalHours"));
+                    return vehicle;
+                }
+        );
+    }
+
+    @Override
+    public CommonResult PaidVehicleCharge(ParkingVehicle parkingVehicle) {
+        String sql = "CALL usp_UpdatePaymentVehicleParking(?, ?, ?, ?, ?, ?, ?)";
+        return jdbcTemplate.queryForObject(
+                sql,
+                new Object[]{
+                        parkingVehicle.getParkingId(),        // p_VehicleId
+                        parkingVehicle.getComments(),              // p_Name
+                        parkingVehicle.getPaidThrow(),     // p_PerHourCharg
+                        parkingVehicle.getTotalHours(),
+                        parkingVehicle.getTotalCharge(),// p_IsDeleted
+                        parkingVehicle.getOwnerId(),
+                        parkingVehicle.getTransactionId(),
+                },
+                (rs, rowNum) -> new CommonResult(
+                        rs.getInt("Result"),
+                        rs.getString("Message")
+                )
+        );
+    }
+
 }

@@ -25,7 +25,7 @@ public class ParkingVehicle {
 
     private LocalDateTime CheckIn;
     private LocalDateTime CheckOut;
-    private LocalTime TotalHours;
+    private String TotalHours;
     private int VehicleTypeId;
     private double PerHourCharge;
     private String TransactionId;

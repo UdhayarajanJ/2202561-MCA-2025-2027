@@ -18,6 +18,7 @@ import { Toast } from "primeng/toast";
 import { Dialog } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 
 @Component({
   selector: 'app-vehicles',
@@ -257,6 +258,11 @@ export class Vehicles implements OnInit {
           data: [],
           totalRecords: 0
         };
+
+        this.cdr.markForCheck();
+        if (err as HttpErrorResponse && err.status == HttpStatusCode.NotFound as number)
+          return;
+        
         throw err
       }
     });

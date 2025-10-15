@@ -35,13 +35,11 @@
                     <th> </th>
                     <th> </th>
                     <th>
-                        <p-datepicker style="width: 100% !important;" placeholder="Filter by date" dateFormat="dd-mm-yy"
-                            [showButtonBar]="true"
-                            [showIcon]="true"
-                            [showClear]="true"
+                        <p-datepicker style="width: 100% !important;" placeholder="Filter by date" dateFormat="dd-mm-yyyy"
+                            [showButtonBar]="true" [showIcon]="true" [showClear]="true"
                             (onSelect)="onFilterChange('modifiedDate', $event)"
-                            (onClearClick)="onFilterChange('modifiedDate', null)" 
-                            (onClear)="onFilterChange('modifiedDate', null)"/>
+                            (onClearClick)="onFilterChange('modifiedDate', null)"
+                            (onClear)="onFilterChange('modifiedDate', null)" />
                     </th>
                     <th></th>
                     <th></th>
@@ -58,13 +56,9 @@
                     <td>{{ vehicle.totalSlots }}</td>
                     <td><p-toggleswitch [(ngModel)]="vehicle.isEnabled"
                             (onChange)="changeStatusOfVehicleTypes(vehicle,$event)" /></td>
-                    <td class="action-area">
-                        <span class="action-wrapper" (click)="updateVehicleTypes(vehicle)">
-                            <img src="icons/edit-plant-svgrepo-com.svg" alt="side-nav-icon" class="side-nav-icon-img">
-                        </span>
-                        <span class="action-wrapper" (click)="deleteVehicleTypes(vehicle)">
-                            <img src="icons/delete-svgrepo-com.svg" alt="side-nav-icon" class="side-nav-icon-img">
-                        </span>
+                    <td class="text-center">
+                        <img src="icons/edit-svgrepo-com.svg" (click)="updateVehicleTypes(vehicle)" alt="side-nav-icon" class="side-action-icon-img">
+                        <img src="icons/trash-vehicle-parking.svg" (click)="deleteVehicleTypes(vehicle)" alt="side-nav-icon" class="side-action-icon-img">
                     </td>
                 </tr>
             </ng-template>
@@ -81,7 +75,7 @@
 </div>
 <div class="card">
     <p-dialog [header]="buttonText +' Vehicle'" [modal]="true" [(visible)]="saveUpdatePopupVisible" position="right"
-        [style]="{ width: '35rem' }">
+        [style]="{ width: '35rem' }" [draggable]="false" [resizable]="false">
         <form class="flex flex-col gap-4" [formGroup]="vehicleTypesGroup" (ngSubmit)="onSubmitVehicleTypes()">
             <div class="form-custom-fields">
                 <h6 for="name" class="font-medium mb-1">* Name</h6>

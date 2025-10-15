@@ -54,7 +54,7 @@
     width: 100% !important;
 }
 
-.p-select{
+.custom-select-box{
     width: 100% !important;
 }
 .p-toggleswitch.p-toggleswitch-checked .p-toggleswitch-slider{
@@ -68,3 +68,16 @@
 .uppercase::placeholder {
   text-transform: none;
 }
+
+.payment-model-popup .p-dialog-header{
+    background: #fd7e14 !important;
+    border-radius: 1rem !important;
+    color: #fff !important;
+}
+
+.p-radiobutton-checked .p-radiobutton-box{
+    border-color: #fd7e14 !important;
+    background: #fd7e14 !important;
+    background-color: #fd7e14 !important;
+}
+

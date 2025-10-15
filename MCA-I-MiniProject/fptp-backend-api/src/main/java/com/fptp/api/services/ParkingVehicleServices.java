@@ -31,7 +31,8 @@ public class ParkingVehicleServices {
             String ownerId,
             String filterVehicleNo,
             Boolean filterIsPaid,
-            LocalDateTime filterDate,
+            LocalDateTime filterCheckInDate,
+            LocalDateTime filterCheckOutDate,
             String filterMobileNo,
             String filterName,
             Integer filterVehicleId,
@@ -43,11 +44,24 @@ public class ParkingVehicleServices {
                 ownerId,
                 filterVehicleNo,
                 filterIsPaid,
-                filterDate,
+                filterCheckInDate,
+                filterCheckOutDate,
                 filterMobileNo,
                 filterName,
                 filterVehicleId,
                 filterIsSubmittedKey,
                 filterPaidThrow);
+    }
+
+    public CommonResult DeleteRegisterationVehicle(int parkingId, String ownerId) {
+        return parkingVehicleRepository.DeleteRegisterationVehicle(parkingId, ownerId);
+    }
+
+    public ParkingVehicle GetTotalChargeOfVehicle(int parkingId, String ownerId) {
+        return parkingVehicleRepository.GetTotalChargeOfVehicle(parkingId, ownerId);
+    }
+
+    public CommonResult PaidVehicleCharge(ParkingVehicle parkingVehicle) {
+        return parkingVehicleRepository.PaidVehicleCharge(parkingVehicle);
     }
 }
