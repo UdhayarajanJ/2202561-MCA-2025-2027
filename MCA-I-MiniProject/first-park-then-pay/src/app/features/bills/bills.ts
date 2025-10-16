@@ -29,6 +29,7 @@ import { QRCodeComponent } from 'angularx-qrcode';
 import { RadioButton } from 'primeng/radiobutton';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { ConvertIso } from '../../core/utilities/convert-iso';
+import { Storage } from '../../core/utilities/storage';
 @Component({
   selector: 'app-bills',
   imports: [
@@ -56,10 +57,10 @@ import { ConvertIso } from '../../core/utilities/convert-iso';
   templateUrl: './bills.html',
   styleUrl: './bills.scss',
   standalone: true,
-  providers: [VehicleService, ParkingService, ConfirmationService, ConvertIso]
+  providers: [VehicleService, ParkingService, ConfirmationService, ConvertIso, Storage]
 })
 export class Bills implements OnInit {
-  private _ownerId: string = "1";
+  private _ownerId: string = "";
   private destroy$ = new Subject<void>();
 
   public vehicleTypes: VehicleTypes[] = [];
@@ -88,10 +89,12 @@ export class Bills implements OnInit {
     private cdr: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private datePipe: DatePipe,
-    private convertISO: ConvertIso
+    private convertISO: ConvertIso,
+    private storageService: Storage
   ) { }
 
   public ngOnInit(): void {
+    this._ownerId = this.storageService.getOwnerId();
     this.defaultFormLoad();
     this.getActiveVehicle();
     this.filterDefaultLoad();
@@ -296,6 +299,10 @@ export class Bills implements OnInit {
       error: (err) => {
         this.showLoader = false;
         this.vehicleTypes = [];
+        this.cdr.markForCheck();
+        if (err as HttpErrorResponse && err.status == HttpStatusCode.NotFound as number)
+          return;
+
         throw err
       }
     });

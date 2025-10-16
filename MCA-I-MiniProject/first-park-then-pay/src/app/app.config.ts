@@ -12,6 +12,13 @@ import { MessageService } from 'primeng/api';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { environment } from '../environments/environment';
 import { DatePipe } from '@angular/common';
+import { AutoRefreshTokenService, createInterceptorCondition, INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG, IncludeBearerTokenCondition, includeBearerTokenInterceptor, provideKeycloak, UserActivityService, withAutoRefreshToken } from 'keycloak-angular';
+
+
+const urlCondition = createInterceptorCondition<IncludeBearerTokenCondition>({
+  urlPattern: new RegExp(`^${environment.API_BASE_URL}`),
+  bearerPrefix: 'Bearer'
+});
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,7 +32,6 @@ export const appConfig: ApplicationConfig = {
       }
     }),
     MessageService,
-    provideHttpClient(withInterceptors([commonInterceptor])),
     { provide: ErrorHandler, useClass: GlobalErrorhanlder },
     DatePipe,
     importProvidersFrom(
@@ -36,5 +42,28 @@ export const appConfig: ApplicationConfig = {
         timestampFormat: environment.DATE_FORMAT
       })
     ),
+    provideKeycloak({
+      config: {
+        url: environment.keycloak.authority,
+        realm: environment.keycloak.realm,
+        clientId: environment.keycloak.clientId
+      },
+      initOptions: {
+        onLoad: 'check-sso',
+        silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html'
+      },
+      features: [
+        withAutoRefreshToken({
+          onInactivityTimeout: 'logout',
+          sessionTimeout: 60000
+        })
+      ],
+      providers: [AutoRefreshTokenService, UserActivityService]
+    }),
+    {
+      provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
+      useValue: [urlCondition]
+    },
+    provideHttpClient(withInterceptors([includeBearerTokenInterceptor,commonInterceptor])),
   ]
 };

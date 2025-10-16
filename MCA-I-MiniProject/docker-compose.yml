@@ -33,7 +33,7 @@ services:
     image: quay.io/keycloak/keycloak:26.0.0
     container_name: fptp_keycloack_server
     command: ["start-dev"]
-    restart: always
+    restart: unless-stopped
     depends_on:
       - fptp_mysql_server
     networks:
@@ -49,5 +49,7 @@ services:
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin123
     ports:
       - 4001:8080
+    volumes:
+      - ./keycloak_custom_themes:/opt/keycloak/providers/
     
     
