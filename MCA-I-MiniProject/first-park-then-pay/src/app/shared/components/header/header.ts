@@ -1,5 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { KEYCLOAK_EVENT_SIGNAL } from 'keycloak-angular';
+import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
 import Keycloak from 'keycloak-js';
 import { NGXLogger } from 'ngx-logger';
 import { ConfirmationService } from 'primeng/api';
@@ -24,6 +23,7 @@ export class Header implements OnInit {
     private keyCloak: Keycloak,
     private logger: NGXLogger,
     private confirmationService: ConfirmationService,
+    private cdr:ChangeDetectorRef
   ) { }
 
   public ngOnInit(): void {
@@ -34,6 +34,7 @@ export class Header implements OnInit {
       this.userName = firstName + ' ' + lastName;
       this.email = profile.email || '';
       this.userImageText = firstName.slice(0, 1) + lastName.slice(0, 1);
+      this.cdr.markForCheck();
     }).catch(err => {
       throw err;
     });
