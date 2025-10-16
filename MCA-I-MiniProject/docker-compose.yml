@@ -21,6 +21,7 @@ services:
       MYSQL_DATABASE: keycloak
       MYSQL_USER: keycloak
       MYSQL_PASSWORD: keycloak123
+      TZ: Asia/Kolkata
     ports:
       - 4000:3306
     networks:

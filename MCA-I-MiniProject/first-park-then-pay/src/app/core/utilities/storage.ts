@@ -13,4 +13,13 @@ export class Storage {
   public getOwnerId(): string {
     return sessionStorage.getItem("_ownerId") || '';
   }
+
+  public saveUPICustomer(upiID: string) {
+    sessionStorage.clear()
+    sessionStorage.setItem("_ownerUPI", upiID || '');
+  }
+
+  public getUPICustomer(): string {
+    return sessionStorage.getItem("_ownerUPI") || '';
+  }
 }
