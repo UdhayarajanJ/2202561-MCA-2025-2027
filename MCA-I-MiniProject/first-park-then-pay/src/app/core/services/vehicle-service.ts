@@ -3,7 +3,7 @@ import { ApiService } from './api-sevice';
 import { CommonAPIResponse } from '../models/common-apiresponse';
 import { Observable } from 'rxjs';
 import { PaginationTypes } from '../models/pagination-types';
-import { VehicleTypes } from '../models/vehicle-types';
+import { VehicleTypes, VehicleTypeSummary } from '../models/vehicle-types';
 import { Confirmationresult } from '../models/confirmationresult';
 
 @Injectable({
@@ -38,5 +38,20 @@ export class VehicleService {
 
   public getActiveVehicle(ownerId:string): Observable<CommonAPIResponse<VehicleTypes[]>> {
     return this.apiService.get(`api/Vehicle/GetVehicleTypes/${ownerId}`);
+  }
+
+  public getVehicleTypeSummary(
+    pageNo: number,
+    pageSize: number,
+    filterName: string,
+    ownerId: string
+  ): Observable<CommonAPIResponse<PaginationTypes<VehicleTypeSummary>>> {
+    const params: Record<string, any> = {
+      pageNo,
+      pageSize,
+      filterName,
+      ownerId
+    };
+    return this.apiService.get("api/Vehicle/GetVehicleTypeSummary", params);
   }
 }

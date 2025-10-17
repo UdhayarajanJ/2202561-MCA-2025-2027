@@ -1,3 +1,97 @@
-<p>home works!</p>
+<p class="alert-report-label">* Report available only for current date. Note past date or month not available.</p>
 
-<app-loader [showLoader]="false"></app-loader>
+<div class="chart-wrapper">
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="card-wrapper-custom">
+                @if(barChartOptions){
+                <apx-chart [series]="barChartOptions.series" [chart]="barChartOptions.chart"
+                    [dataLabels]="barChartOptions.dataLabels" [plotOptions]="barChartOptions.plotOptions"
+                    [xaxis]="barChartOptions.xaxis" [colors]="barChartOptions.colors"
+                    [tooltip]="barChartOptions.tooltip"></apx-chart>
+                }
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="card-wrapper-custom">
+                @if(pieChartOptions){
+                <apx-chart [series]="pieChartOptions.series" [chart]="pieChartOptions.chart"
+                    [dataLabels]="pieChartOptions.dataLabels" [labels]="pieChartOptions.labels"
+                    [responsive]="pieChartOptions.responsive"></apx-chart>
+                }
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-12">
+            <div class="card-wrapper-custom">
+                @if(columnChart){
+                <apx-chart [series]="columnChart.series" [chart]="columnChart.chart"
+                    [dataLabels]="columnChart.dataLabels" [plotOptions]="columnChart.plotOptions"
+                    [yaxis]="columnChart.yaxis" [legend]="columnChart.legend" [fill]="columnChart.fill"
+                    [stroke]="columnChart.stroke" [tooltip]="columnChart.tooltip"
+                    [xaxis]="columnChart.xaxis"></apx-chart>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="vehicle-type-table-wrapper">
+    <div class="table-wrapper-custom">
+        @if(vehicleSummaryPagination.data!=[]){
+        <p-table [value]="vehicleSummaryPagination.data" showGridlines [rowsPerPageOptions]="[5, 10, 20]"
+            [paginator]="true" [rows]="pageSize" [first]="first_Page_Index" [showCurrentPageReport]="true"
+            [totalRecords]="vehicleSummaryPagination.totalRecords"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [lazy]="true"
+            (onPage)="onPageChange($event)" [lazy]="true">
+            <ng-template #header>
+                <tr>
+                    <th>SNo.</th>
+                    <th>Name</th>
+                    <th>Total Slots</th>
+                    <th>Avaliable Slots</th>
+                    <th>Reserved Slots</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>
+                        <input pInputText id="name" type="text" placeholder="Filter by name" class="w-100"
+                            autocomplete="off" (input)="onFilterChange($event.target.value)" />
+                    </th>
+                    <th> </th>
+                    <th> </th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-vehicle let-rowIndex="rowIndex">
+                <tr>
+                    <td>{{ rowIndex + 1}}</td>
+                    <td>{{ vehicle.name }}</td>
+                    <td>{{ vehicle.totalSlots }}</td>
+                    <td>{{ vehicle.availableSlots }}</td>
+                    <td>{{ vehicle.reservedSlots }}</td>
+                    <td class="text-center">
+                        @if( !vehicle.isEnabled){
+                        <img src="icons/red-circle-svgrepo-com.svg" alt="side-nav-icon" class="side-nav-icon-img">
+                        }
+                        @else {
+                        <img src="icons/green-circle-svgrepo-com.svg" alt="side-nav-icon" class="side-nav-icon-img">
+                        }
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="6" class="text-center py-4 text-gray-500">
+                        No records found
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        }
+    </div>
+</div>
+
+
+<app-loader [showLoader]="showLoader"></app-loader>

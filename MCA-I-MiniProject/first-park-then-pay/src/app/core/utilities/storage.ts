@@ -6,7 +6,6 @@ import { Injectable } from '@angular/core';
 
 export class Storage {
   public saveOwnerId(ownerId: string) {
-    sessionStorage.clear()
     sessionStorage.setItem("_ownerId", ownerId || '');
   }
 
@@ -15,7 +14,6 @@ export class Storage {
   }
 
   public saveUPICustomer(upiID: string) {
-    sessionStorage.clear()
     sessionStorage.setItem("_ownerUPI", upiID || '');
   }
 

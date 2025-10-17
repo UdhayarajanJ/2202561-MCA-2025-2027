@@ -2,6 +2,7 @@ package com.fptp.api.contracts;
 
 import com.fptp.api.models.CommonResult;
 import com.fptp.api.models.PaginationResult;
+import com.fptp.api.models.VehicleTypeSummary;
 import com.fptp.api.models.VehicleTypes;
 
 import java.time.LocalDateTime;
@@ -13,4 +14,6 @@ public interface IVehicleContracts {
     CommonResult SaveUpdateVehicleTypes(VehicleTypes vehicleTypes);
 
     PaginationResult<VehicleTypes> GetVehicleTableRecords(int pageNo, int pageSize, LocalDateTime filterDate, String filterName, String ownerId);
+
+    PaginationResult<VehicleTypeSummary> GetVehicleTypeSummary(int pageNo, int pageSize, String filterName, String ownerId);
 }

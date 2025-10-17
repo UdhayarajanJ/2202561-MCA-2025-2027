@@ -381,7 +381,7 @@
             <h2 class="text-center">{{totalChargeParkingVehicle.totalCharge | currency:'INR':'symbol':'1.2-2'}}</h2>
             <div class="qr-code-upi text-center">
                 <qrcode
-                    [qrdata]="`upi://pay?pa=udhayarajan080@okhdfcbank&pn=${totalChargeParkingVehicle.name}&am=${totalChargeParkingVehicle.totalCharge}&cu=INR&tn=FPTP-${totalChargeParkingVehicle.checkIn}-${totalChargeParkingVehicle.vehicleNo}-${totalChargeParkingVehicle.ownerId}-${totalChargeParkingVehicle.parkingId}&tr=FPTP-${totalChargeParkingVehicle.checkIn}-${totalChargeParkingVehicle.vehicleNo}-${totalChargeParkingVehicle.ownerId}-${totalChargeParkingVehicle.parkingId}`"
+                    [qrdata]="`upi://pay?pa=${ownerUPIID}&pn=${totalChargeParkingVehicle.name}&am=${totalChargeParkingVehicle.totalCharge}&cu=INR&tn=FPTP (${totalChargeParkingVehicle.vehicleNo}) (${totalChargeParkingVehicle.parkingId})&tr=FPTP (${totalChargeParkingVehicle.vehicleNo}) (${totalChargeParkingVehicle.parkingId})`"
                     [width]="256" [errorCorrectionLevel]="'high'"></qrcode>
             </div>
             <div class="payment-mode">

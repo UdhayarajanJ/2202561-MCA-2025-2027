@@ -4,7 +4,7 @@
         <p-button label="FPTP" severity="warn" size="large" />
     </div>
     <div class="user-profile-corner d-flex align-items-center">
-        <div class="logo-image-user">
+        <div class="logo-image-user" style="cursor: pointer;" (click)="openProfile()">
             <h4 class="user-image-text">{{this.userImageText}}</h4>
         </div>
         <div class="user-info-email">

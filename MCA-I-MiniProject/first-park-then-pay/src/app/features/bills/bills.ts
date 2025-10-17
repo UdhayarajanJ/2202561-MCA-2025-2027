@@ -79,6 +79,7 @@ export class Bills implements OnInit {
   public paymentModeDd: { data: string, text: string }[] = [{ data: 'Online', text: 'Online' }, { data: 'Cash', text: 'Cash' }, { data: 'Abandant', text: 'Abandant' }]
   public showInformationPopup: boolean = false;
   public showParkingVehicleInformation: Parkingvehicle | null = null;
+  public ownerUPIID: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -95,6 +96,7 @@ export class Bills implements OnInit {
 
   public ngOnInit(): void {
     this._ownerId = this.storageService.getOwnerId();
+    this.ownerUPIID = this.storageService.getUPICustomer();
     this.defaultFormLoad();
     this.getActiveVehicle();
     this.filterDefaultLoad();

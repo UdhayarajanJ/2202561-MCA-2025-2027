@@ -36,7 +36,6 @@ import { Storage } from '../../core/utilities/storage';
     Toast,
     Dialog,
     ButtonModule,
-    InputTextModule,
     ReactiveFormsModule,
     CommonModule,
     DatePickerModule
@@ -127,7 +126,7 @@ export class Vehicles implements OnInit {
     this.filterSubject$.next(filters);
   }
 
-  onFilterChange(field: 'name' | 'modifiedDate', value: any): void {
+  public onFilterChange(field: 'name' | 'modifiedDate', value: any): void {
     if (field === 'name') {
       const trimmed = value?.trim() || '';
       this._filterName = trimmed.length > 0 ? trimmed : '';

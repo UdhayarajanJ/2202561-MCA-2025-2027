@@ -1,4 +1,4 @@
-import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import Keycloak from 'keycloak-js';
 import { NGXLogger } from 'ngx-logger';
 import { ConfirmationService } from 'primeng/api';
@@ -23,7 +23,7 @@ export class Header implements OnInit {
     private keyCloak: Keycloak,
     private logger: NGXLogger,
     private confirmationService: ConfirmationService,
-    private cdr:ChangeDetectorRef
+    private cdr: ChangeDetectorRef
   ) { }
 
   public ngOnInit(): void {
@@ -66,8 +66,10 @@ export class Header implements OnInit {
       },
       reject: () => { },
     });
+  }
 
-
+  public openProfile(): void {
+    this.keyCloak.accountManagement();
   }
 
 }

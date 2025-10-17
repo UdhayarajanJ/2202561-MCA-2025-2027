@@ -5,6 +5,7 @@ import { RouterOutlet } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import Keycloak from 'keycloak-js';
 import { Storage } from './core/utilities/storage';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-root',
@@ -17,12 +18,15 @@ import { Storage } from './core/utilities/storage';
 export class App implements OnInit {
   constructor(
     private keyCloackInstance: Keycloak,
-    private storageService: Storage
+    private storageService: Storage,
+    private logger: NGXLogger,
   ) { }
 
   public ngOnInit(): void {
     this.keyCloackInstance.loadUserProfile?.().then(profile => {
+      let upiID: string = profile.attributes && profile.attributes['upiId'] && profile.attributes['upiId'] instanceof Array ? profile.attributes['upiId'][0] : '';
       this.storageService.saveOwnerId(profile.id || '');
+      this.storageService.saveUPICustomer(upiID);
     }).catch(err => {
       throw err;
     });
