@@ -6,10 +6,11 @@ import { ToastModule } from 'primeng/toast';
 import Keycloak from 'keycloak-js';
 import { Storage } from './core/utilities/storage';
 import { NGXLogger } from 'ngx-logger';
+import { Footer } from "./shared/components/footer/footer";
 
 @Component({
   selector: 'app-root',
-  imports: [Header, Menu, RouterOutlet, ToastModule],
+  imports: [Header, Menu, RouterOutlet, ToastModule, Footer],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   standalone: true,
