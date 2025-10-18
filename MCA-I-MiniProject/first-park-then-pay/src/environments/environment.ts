@@ -1,5 +1,5 @@
 export const environment = {
-    API_BASE_URL: "http://localhost:8080",
+    API_BASE_URL: "http://localhost:4003",
     DATE_FORMAT: 'dd-MM-yyyy hh:mm:ss a',
     LOGS_ENABLED: true,
     keycloak: {
