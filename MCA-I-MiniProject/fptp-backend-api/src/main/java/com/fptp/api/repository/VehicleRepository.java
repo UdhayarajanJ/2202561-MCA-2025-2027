@@ -3,6 +3,7 @@ package com.fptp.api.repository;
 import com.fptp.api.contracts.IVehicleContracts;
 import com.fptp.api.models.CommonResult;
 import com.fptp.api.models.PaginationResult;
+import com.fptp.api.models.VehicleTypeSummary;
 import com.fptp.api.models.VehicleTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,9 +12,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Types;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,7 @@ public class VehicleRepository implements IVehicleContracts {
 
         return jdbcTemplate.query(
                 sql,
-                new Object[]{ ownerId },
+                new Object[]{ownerId},
                 (rs, rowNum) -> new VehicleTypes(
                         rs.getInt("VehicleId"),
                         rs.getString("Name"),
@@ -111,6 +110,43 @@ public class VehicleRepository implements IVehicleContracts {
             totalRecords = totalList.get(0);
         }
         List<VehicleTypes> items = (List<VehicleTypes>) out.get("vehicles");
+        return new PaginationResult<>(totalRecords, items);
+    }
+
+    @Override
+    public PaginationResult<VehicleTypeSummary> GetVehicleTypeSummary(int pageNo, int pageSize, String filterName, String ownerId) {
+        jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                .withProcedureName("usp_GetVehicleTypeSummary")
+                .withoutProcedureColumnMetaDataAccess()
+                .declareParameters(
+                        new SqlParameter("p_PageNo", Types.INTEGER),
+                        new SqlParameter("p_PageSize", Types.INTEGER),
+                        new SqlParameter("p_OwnerId", Types.VARCHAR),
+                        new SqlParameter("p_FilterName", Types.VARCHAR)
+                )
+                .returningResultSet("totalRecords", (rs, rowNum) -> rs.getInt("totalRecords"))
+                .returningResultSet("vehiclesTypeSummary", (rs, rowNum) -> {
+                    VehicleTypeSummary v = new VehicleTypeSummary();
+                    v.setName(rs.getString("Name"));
+                    v.setTotalSlots(rs.getInt("TotalSlots"));
+                    v.setAvailableSlots(rs.getInt("AvailableSlots"));
+                    v.setReservedSlots(rs.getInt("ReservedSlots"));
+                    v.setIsEnabled(rs.getBoolean("IsEnabled"));
+                    return v;
+                });
+        Map<String, Object> inParams = new HashMap<>();
+        inParams.put("p_PageNo", pageNo);
+        inParams.put("p_PageSize", pageSize);
+        inParams.put("p_OwnerId", ownerId);
+        inParams.put("p_FilterName", filterName);
+
+        Map<String, Object> out = jdbcCall.execute(inParams);
+        int totalRecords = 0;
+        List<Integer> totalList = (List<Integer>) out.get("totalRecords");
+        if (totalList != null && !totalList.isEmpty()) {
+            totalRecords = totalList.get(0);
+        }
+        List<VehicleTypeSummary> items = (List<VehicleTypeSummary>) out.get("vehiclesTypeSummary");
         return new PaginationResult<>(totalRecords, items);
     }
 }

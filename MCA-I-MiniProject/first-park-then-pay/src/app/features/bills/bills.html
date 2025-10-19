@@ -1,1 +1,421 @@
-<p>bills works!</p>
+<div class="bill-wrapper">
+    <div class="register-vehicle-wrapper">
+        <form class="row" [formGroup]="parkingVehicleForms" [autocomplete]="'off'" (ngSubmit)="onRegisterVehicle()">
+            <div class="col-11">
+                <div class="row">
+                    <div class="col-md-6 col-lg-3 col-12">
+                        <div class="form-custom-fields">
+                            <h6 for="vehicleNo" class="font-medium mb-1">* Vehicle No.</h6>
+                            <input pInputText id="vehicleNo" placeholder="Enter vehicle number" class="w-100"
+                                formControlName="vehicleNo" (input)="checkVehicleStatus()"
+                                [ngClass]="(parkingVehicleForms.get('vehicleNo')?.invalid && parkingVehicleForms.get('vehicleNo')?.touched) || (vehicleStatus && vehicleStatus.parkingStatus)?'error-form-element uppercase':'uppercase'" />
+                            @if(parkingVehicleForms.get('vehicleNo')?.invalid &&
+                            parkingVehicleForms.get('vehicleNo')?.touched){
+                            <small class="error-label">Invalid vehicle number. (eg MH14LK0511)</small>
+                            }
+                            @if(parkingVehicleForms.get('vehicleNo')?.valid && vehicleStatus){
+                            <small
+                                [ngClass]="vehicleStatus && vehicleStatus.parkingStatus?'error-label':'success-label'">{{vehicleStatus.message}}</small>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 col-12">
+                        <div class="form-custom-fields">
+                            <h6 for="name" class="font-medium mb-1">Owner Name (optional)</h6>
+                            <input pInputText id="name" placeholder="Enter owner name" class="w-100"
+                                formControlName="name" />
+
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 col-12">
+                        <div class="form-custom-fields">
+                            <h6 for="mobileNo" class="font-medium mb-1">Mobile Number (optional)</h6>
+                            <input pInputText id="mobileNo" placeholder="Enter mobile number" class="w-100"
+                                formControlName="mobileNo" />
+
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 col-12">
+                        <div class="form-custom-fields">
+                            <h6 for="vehicleTypeId" class="font-medium mb-1">* Vehicle type</h6>
+                            <p-select formControlName="vehicleTypeId" [options]="vehicleTypes" optionLabel="name"
+                                optionValue="vehicleId" placeholder="- Select -"
+                                [showClear]="(parkingVehicleForms.get('vehicleTypeId')?.value || 0) > 0"
+                                (onChange)="bindVehicleInformation($event)" class="custom-select-box"></p-select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 col-12">
+                        <div class="form-custom-fields">
+                            <h6 for="checkIn" class="font-medium mb-1">Check In</h6>
+                            @if (parkingVehicleForms.get('vehicleTypeId')?.value !== null &&
+                            parkingVehicleForms.get('vehicleTypeId')?.value!=0 && slotAvailable) {
+                            <h6>{{ parkingVehicleForms.get('checkIn')?.value | date:dateFormat}}</h6>
+                            }
+                            @else {
+                            <small class="error-label"> - </small>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 col-12">
+                        <div class="form-custom-fields">
+                            <h6 for="blockName" class="font-medium mb-1">Block Name</h6>
+                            @if (parkingVehicleForms.get('vehicleTypeId')?.value !== null &&
+                            parkingVehicleForms.get('vehicleTypeId')?.value!=0 && slotAvailable) {
+                            <h6>{{ parkingVehicleForms.get('blockName')?.value }}</h6>
+                            }
+                            @else {
+                            <small class="error-label"> Select vehicle type then Check whether available slots are not
+                                ?</small>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 col-12">
+                        <div class="form-custom-fields">
+                            <h6 for="slotNo" class="font-medium mb-1">Slot No.</h6>
+                            @if (parkingVehicleForms.get('vehicleTypeId')?.value !== null &&
+                            parkingVehicleForms.get('vehicleTypeId')?.value!=0 && slotAvailable) {
+                            <h6>{{ parkingVehicleForms.get('slotNo')?.value }}</h6>
+                            }
+                            @else {
+                            <small class="error-label"> Select vehicle type then Check whether available slots are not
+                                ?</small>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3 col-12">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-custom-fields">
+                                    <h6 for="hourlyCharge" class="font-medium mb-1">Per/Hour Charge.</h6>
+                                    @if (parkingVehicleForms.get('vehicleTypeId')?.value !== null &&
+                                    parkingVehicleForms.get('vehicleTypeId')?.value!=0 && slotAvailable) {
+                                    <h6>{{ parkingVehicleForms.get('perHourCharge')?.value |
+                                        currency:'INR':'symbol':'1.2-2'}}</h6>
+                                    }
+                                    @else {
+                                    <small class="error-label"> Select vehicle type.</small>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-custom-fields">
+                                    <h6 for="hourlyCharge" class="font-medium mb-1 d-flex align-items-center">
+                                        <p-toggleswitch formControlName="isSubmittedKey" /><span class="mx-2"> Is key
+                                            submitted ?</span>
+                                    </h6>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1">
+                <div class="row">
+                    <div class="action-area add-vehicle">
+                        <button class="action-wrapper w-100" type="submit"
+                            [disabled]="!slotAvailable || (vehicleStatus && vehicleStatus.parkingStatus)">
+                            <img src="icons/add-square-svgrepo-com.svg" alt="side-nav-icon" class="side-nav-icon-img">
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="action-area add-vehicle">
+                        <button class="action-wrapper action-wrapper-clear w-100" type="button"
+                            (click)="defaultFormLoad()">
+                            <img src="icons/clear-fill-svgrepo-com.svg" alt="side-nav-icon" class="side-nav-clear-img">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        @if(parkingVehiclePagination.data!=[]){
+        <div class="table-wrapper">
+            <p-table [value]="parkingVehiclePagination.data" showGridlines [rowsPerPageOptions]="[5, 10, 20]"
+                [paginator]="true" [rows]="filterParkingVehicleForms.get('pageSize')?.value || 10"
+                [first]="filterParkingVehicleForms.get('firstPageIndex')?.value || 0" [showCurrentPageReport]="true"
+                [totalRecords]="parkingVehiclePagination.totalRecords"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                (onPage)="onPageChange($event)" [lazy]="true">
+                <ng-template #header>
+                    <tr>
+                        <th>SNo.</th>
+                        <th>Vehicle No.</th>
+                        <th>Name</th>
+                        <th>Mobile No.</th>
+                        <th>Check In</th>
+                        <th>Check Out</th>
+                        <th>Total Hours</th>
+                        <th>Vehicle Type.</th>
+                        <th>Block Name</th>
+                        <th>Slot No.</th>
+                        <th>Paid</th>
+                        <th>Payment Mode</th>
+                        <th>Key Status</th>
+                        <th></th>
+                    </tr>
+                    <tr [formGroup]="filterParkingVehicleForms">
+                        <th></th>
+                        <th>
+                            <input pInputText formControlName="filterVehicleNo" id="filterVehicleNo" type="text"
+                                placeholder="Filter by vehicle number" class="w-100" autocomplete="off" />
+                        </th>
+                        <th>
+                            <input pInputText formControlName="filterName" id="filterName" type="text"
+                                placeholder="Filter by name" class="w-100" autocomplete="off" />
+                        </th>
+                        <th>
+                            <input pInputText id="filterMobileNo" formControlName="filterMobileNo" type="text"
+                                placeholder="Filter by mobile number" class="w-100" autocomplete="off" />
+                        </th>
+                        <th>
+                            <p-datepicker appendTo="body" formControlName="filterCheckInDate"
+                                style="width: 100% !important;" placeholder="Filter by check in date"
+                                dateFormat="dd-mm-yy" [showButtonBar]="true" [showIcon]="true" [showClear]="true"
+                                (onClearClick)="onFilterChange('filterCheckInDate', '')"
+                                (onClear)="onFilterChange('filterCheckOutDate', '')" />
+                        </th>
+                        <th>
+                            <p-datepicker appendTo="body" formControlName="filterCheckOutDate"
+                                style="width: 100% !important;" placeholder="Filter by check out date"
+                                dateFormat="dd-mm-yy" [showButtonBar]="true" [showIcon]="true" [showClear]="true"
+                                (onClearClick)="onFilterChange('filterCheckOutDate', '')"
+                                (onClear)="onFilterChange('filterCheckOutDate', '')" />
+                        </th>
+                        <th></th>
+                        <th>
+                            <p-select appendTo="body" formControlName="filterVehicleId" [options]="vehicleTypes"
+                                optionLabel="name" optionValue="vehicleId" placeholder="- Select -"
+                                [showClear]="(filterParkingVehicleForms.get('filterVehicleId')?.value || 0) > 0"
+                                class="custom-select-box" (onClearClick)="onFilterChange('filterVehicleId', 0)"
+                                (onClear)="onFilterChange('filterVehicleId', 0)"></p-select>
+                        </th>
+                        <th></th>
+                        <th></th>
+                        <th><p-select appendTo="body" formControlName="filterIsPaid" [options]="paymentPaidStatusDd"
+                                optionLabel="text" optionValue="data" placeholder="- Select -"
+                                [showClear]="filterParkingVehicleForms.get('filterIsPaid')?.value != ''?true:false"
+                                class="custom-select-box" (onClearClick)="onFilterChange('filterIsPaid', '')"
+                                (onClear)="onFilterChange('filterIsPaid', '')"></p-select></th>
+                        <th>
+                            <p-select appendTo="body" formControlName="filterPaidThrow" [options]="paymentModeDd"
+                                optionLabel="text" optionValue="data" placeholder="- Select -"
+                                [showClear]="filterParkingVehicleForms.get('filterPaidThrow')?.value != ''?true:false"
+                                class="custom-select-box" (onClearClick)="onFilterChange('filterPaidThrow', '')"
+                                (onClear)="onFilterChange('filterPaidThrow', '')"></p-select>
+                        </th>
+                        <th>
+                            <p-select appendTo="body" formControlName="filterIsSubmittedKey" [options]="keyStatusDd"
+                                optionLabel="text" optionValue="data" placeholder="- Select -"
+                                [showClear]="filterParkingVehicleForms.get('filterIsSubmittedKey')?.value !='' ?true:false"
+                                class="custom-select-box" (onClearClick)="onFilterChange('filterIsSubmittedKey', '')"
+                                (onClear)="onFilterChange('filterIsSubmittedKey', '')"></p-select>
+                        </th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template #body let-parkingVehicle let-rowIndex="rowIndex">
+                    <tr>
+                        <td>{{ rowIndex + 1}}</td>
+                        <td>{{ parkingVehicle.vehicleNo }}</td>
+                        <td>{{ parkingVehicle.name || '-'}}</td>
+                        <td>{{ parkingVehicle.mobileNo || '-' }}</td>
+                        <td>{{ parkingVehicle.checkIn | date:dateFormat}}</td>
+                        <td>{{ parkingVehicle.checkOut | date:dateFormat}}</td>
+                        <td class="text-center">
+                            @if( parkingVehicle.isPaid && parkingVehicle.paidThrow == 'Abandant'){
+                            <span style="color: red;font-weight: bold;">{{ parkingVehicle.totalHours
+                                }}</span>
+                            }
+                            @else if(parkingVehicle.isPaid && parkingVehicle.paidThrow != 'Abandant'){
+                            <span style="color: green;font-weight: bold;">{{ parkingVehicle.totalHours
+                                }}</span>
+                            }
+                            @else {
+                            <app-timer-interval [checkInDateTime]="parkingVehicle.checkIn"
+                                style="color: yellow;font-weight: bold;"></app-timer-interval>
+                            }
+                        </td>
+                        <td>{{ parkingVehicle.vehicleTypeName }}</td>
+                        <td>{{ parkingVehicle.blockName }}</td>
+                        <td>{{ parkingVehicle.slotNo }}</td>
+                        <td class="text-center">
+                            @if( parkingVehicle.isPaid && parkingVehicle.paidThrow === 'Abandant'){
+                            <img src="icons/black-circle-svgrepo-com.svg" alt="side-nav-icon" class="side-nav-icon-img">
+                            }
+                            @else if(parkingVehicle.isPaid && parkingVehicle.paidThrow !== 'Abandant'){
+                            <img src="icons/green-circle-svgrepo-com.svg" alt="side-nav-icon" class="side-nav-icon-img">
+                            }
+                            @else {
+                            <img src="icons/yellow-circle-svgrepo-com.svg" alt="side-nav-icon"
+                                class="side-nav-icon-img">
+                            }
+                        </td>
+                        <td>{{ parkingVehicle.paidThrow || '-' }}</td>
+                        <td class="text-center">
+                            @if( !parkingVehicle.isSubmittedKey){
+                            <img src="icons/red-circle-svgrepo-com.svg" alt="side-nav-icon" class="side-nav-icon-img">
+                            }
+                            @else {
+                            <img src="icons/green-circle-svgrepo-com.svg" alt="side-nav-icon" class="side-nav-icon-img">
+                            }
+                        </td>
+                        <td class="d-flex justify-content-start align-items-start">
+                            <img src="icons/trash-vehicle-parking.svg"
+                                (click)="deleteRegisterationVehicle(parkingVehicle)" alt="side-nav-icon"
+                                class="side-action-icon-img">
+                            <img src="icons/info-circle-svgrepo-com.svg"
+                                (click)="onShowVehicleInformation(parkingVehicle)" alt="side-nav-icon"
+                                class="side-action-icon-img">
+                            @if(!parkingVehicle.isPaid){
+                            <img src="icons/stop-circle-svgrepo-com.svg" (click)="prepareTotalCharges(parkingVehicle)"
+                                alt="side-nav-icon" class="side-action-icon-img">
+                            }
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="14" class="text-center py-4 text-gray-500">
+                            No records found
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        }
+    </div>
+</div>
+<div class="card">
+    @if(showParkingVehicleInformation){
+    <p-dialog [header]="'Vehicle Information'" [modal]="true" [(visible)]="showInformationPopup" position="center"
+        [style]="{ width: '35rem' }" [draggable]="false" [resizable]="false" styleClass="payment-model-popup">
+        <div class="payment-wrapper">
+            <div class="short-info-vehicle">
+                <table>
+                    <tr>
+                        <th>Vehicle Number</th>
+                        <td style="font-weight: bold;">{{showParkingVehicleInformation.vehicleNo}}</td>
+                    </tr>
+                    <tr>
+                        <th>Vehicle Type</th>
+                        <td style="font-weight: bold;">{{showParkingVehicleInformation.vehicleTypeName}}</td>
+                    </tr>
+                    <tr>
+                        <th>Name</th>
+                        <td style="font-weight: bold;">{{showParkingVehicleInformation.name}}</td>
+                    </tr>
+                    <tr>
+                        <th>Mobile</th>
+                        <td style="font-weight: bold;">{{showParkingVehicleInformation.mobileNo}}</td>
+                    </tr>
+                    <tr>
+                        <th>Check In</th>
+                        <td style="color: green; font-weight: bold;">{{showParkingVehicleInformation.checkIn |
+                            date:dateFormat}}</td>
+                    </tr>
+                    <tr>
+                        <th>Check Out</th>
+                        <td style="color: green; font-weight: bold;">{{showParkingVehicleInformation.checkOut |
+                            date:dateFormat}}</td>
+                    </tr>
+                    <tr>
+                        <th>Per/Hours</th>
+                        <td style="color: green; font-weight: bold;">{{showParkingVehicleInformation.perHourCharge |
+                            currency:'INR':'symbol':'1.2-2'}}</td>
+                    </tr>
+                    <tr>
+                        <th>Block Name</th>
+                        <td style="font-weight: bold;">{{showParkingVehicleInformation.blockName}}</td>
+                    </tr>
+                    <tr>
+                        <th>Slot No</th>
+                        <td style="font-weight: bold;">{{showParkingVehicleInformation.slotNo}}</td>
+                    </tr>
+                    <tr>
+                        <th>Total Charges</th>
+                        <td style="font-weight: bold;">{{showParkingVehicleInformation.totalCharge |
+                            currency:'INR':'symbol':'1.2-2'}}</td>
+                    </tr>
+                    <tr>
+                        <th>Payment Mode</th>
+                        <td style="font-weight: bold;">{{showParkingVehicleInformation.paidThrow }}</td>
+                    </tr>
+                    <tr>
+                        <th>Total Hours.</th>
+                        <td style="font-weight: bold;">{{showParkingVehicleInformation.totalHours }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </p-dialog>
+    }
+</div>
+
+
+<div class="card">
+    @if(totalChargeParkingVehicle){
+    <p-dialog [header]="totalChargeParkingVehicle.vehicleNo" [modal]="true" [(visible)]="showChargesPopup"
+        position="center" [style]="{ width: '50rem' }" [draggable]="false" [resizable]="false"
+        styleClass="payment-model-popup">
+        <form class="payment-wrapper" [formGroup]="paymentFormGroup" (ngSubmit)="onPaymentVehicle()">
+            <div class="short-info-payment">
+                <table>
+                    <tr>
+                        <th>Check In</th>
+                        <td style="color: green; font-weight: bold;">{{totalChargeParkingVehicle.checkIn |
+                            date:dateFormat}}</td>
+                    </tr>
+                    <tr>
+                        <th>Total Hours</th>
+                        <td style="color: green; font-weight: bold;">{{totalChargeParkingVehicle.totalHours}}</td>
+                    </tr>
+                    <tr>
+                        <th>Per/Hours</th>
+                        <td style="color: green; font-weight: bold;">{{totalChargeParkingVehicle.perHourCharge |
+                            currency:'INR':'symbol':'1.2-2'}}</td>
+                    </tr>
+                </table>
+            </div>
+            <hr class="custom-hr">
+            <h2 class="text-center">{{totalChargeParkingVehicle.totalCharge | currency:'INR':'symbol':'1.2-2'}}</h2>
+            <div class="qr-code-upi text-center">
+                <qrcode
+                    [qrdata]="`upi://pay?pa=${ownerUPIID}&pn=${totalChargeParkingVehicle.name}&am=${totalChargeParkingVehicle.totalCharge}&cu=INR&tn=FPTP (${totalChargeParkingVehicle.vehicleNo}) (${totalChargeParkingVehicle.parkingId})&tr=FPTP (${totalChargeParkingVehicle.vehicleNo}) (${totalChargeParkingVehicle.parkingId})`"
+                    [width]="256" [errorCorrectionLevel]="'high'"></qrcode>
+            </div>
+            <div class="payment-mode">
+                <div class="payment-mode-radio">
+                    <p-radiobutton id="Online" value="Online" formControlName="paidThrow" class="payment-mode-radio" />
+                    <label for="Online">Online</label>
+                </div>
+                <div class="payment-mode-radio">
+                    <p-radiobutton id="Cash" value="Cash" formControlName="paidThrow" class="payment-mode-radio" />
+                    <label for="Cash">Cash</label>
+                </div>
+                <div class="payment-mode-radio">
+                    <p-radiobutton id="Abandant" value="Abandant" formControlName="paidThrow" />
+                    <label for="Abandant">Abandant</label>
+                </div>
+            </div>
+            <div class="comments">
+                <label for="textData">{{paymentFormGroup.get('paidThrow')?.value ==='Online'?'Transaction Id
+                    (optional)':paymentFormGroup.get('paidThrow')?.value ==='Abandant'?'Comments (optional)':'Comments
+                    (optional)'}}</label>
+                <textarea id="textData" rows="5" style="resize: none;" cols="30" class="w-100" pTextarea
+                    formControlName="textData" fluid></textarea>
+            </div>
+            <div class="d-flex justify-content-end custom-form-submission">
+                <p-button label="Cancel" severity="secondary" (onClick)="showChargesPopup = false" class="mx-3" />
+                <p-button label="Save" type="submit" styleClass="btn-common" />
+            </div>
+        </form>
+    </p-dialog>
+    }
+</div>
+
+<div class="card flex justify-center gap-2">
+    <p-toast />
+    <p-confirmdialog />
+</div>
+<app-loader [showLoader]="showLoader"></app-loader>

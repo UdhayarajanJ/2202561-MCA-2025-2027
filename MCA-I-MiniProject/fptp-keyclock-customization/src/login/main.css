@@ -1,0 +1,54 @@
+.kcFormPasswordVisibilityButtonClass{
+    display:none;
+}
+
+.kcInputClass{
+    outline:none;
+    background:transparent;
+    border:none;
+    border-bottom:1px solid #000;
+    margin:10px 0;
+}
+
+.kcInputClass:focus{
+    outline:none;
+    background:transparent;
+    border:none;
+    border-bottom:1px solid #fd7e14;
+    margin:10px 0;
+}
+
+.kcButtonClass{
+    background-color:#fd7e14 !important;
+    font-weight:bold !important;
+    margin-bottom:30px;
+}
+
+.kcFormHeaderClass{
+    margin-bottom:50px;
+}
+
+.kcInputClass[aria-invalid=true]{
+     background-image: none !important;
+     border-bottom:1px solid red !important;
+}
+
+
+.login-pf body {
+    background-size: cover;
+    background: #fff;
+    height: 100%;
+}
+
+.kcLocaleMainClass{
+    display:none;
+}
+
+.kcFormCardClass{
+    border-radius:2rem;
+    border-color:#fd7e14;
+}
+
+.kcHeaderWrapperClass{
+    color:#fd7e14
+}
