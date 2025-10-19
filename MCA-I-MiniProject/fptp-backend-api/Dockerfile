@@ -3,17 +3,17 @@ FROM gradle:8.9-jdk21 AS builder
 
 WORKDIR /app
 
-# Copy only Gradle config first (for caching dependencies)
+# Copy Gradle config first for dependency caching
 COPY build.gradle settings.gradle gradlew ./
 COPY gradle ./gradle
 
 # Download dependencies (cached layer)
-RUN ./gradlew dependencies --no-daemon || return 0
+RUN ./gradlew dependencies --no-daemon || true
 
-# Copy the rest of the source code
+# Copy application source
 COPY . .
 
-# Build the JAR file
+# Build the JAR (skip tests for faster CI/CD)
 RUN ./gradlew clean build -x test --no-daemon
 
 # ---- Stage 2: Run the application ----
@@ -21,11 +21,14 @@ FROM openjdk:21-jdk-slim
 
 WORKDIR /app
 
-# Copy JAR from builder stage
+# Copy JAR from builder
 COPY --from=builder /app/build/libs/*.jar app.jar
 
-# Expose port if needed
+# Expose the Spring Boot port
 EXPOSE 8080
 
-# Run the Spring Boot application
+# Default environment vars (optional, can be overridden by docker-compose)
+ENV SPRING_PROFILES_ACTIVE=docker
+
+# Run the application
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

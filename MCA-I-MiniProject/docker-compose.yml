@@ -1,4 +1,4 @@
-name: fptp
+name: mca-I-miniproject
 networks:
   fptp-networks:
     driver: bridge
@@ -33,7 +33,7 @@ services:
   fptp_keycloack_server:
     image: quay.io/keycloak/keycloak:26.0.0
     container_name: fptp_keycloack_server
-    command: ["start-dev"]
+    command: ["start-dev","--import-realm"]
     restart: unless-stopped
     depends_on:
       - fptp_mysql_server
@@ -52,5 +52,38 @@ services:
       - 4001:8080
     volumes:
       - ./keycloak_custom_themes:/opt/keycloak/providers/
+      - ./fptp-keycloak-realms/fptp_client_realms.json:/opt/keycloak/data/import/fptp_client_realms.json
+
+  fptp-backend-api:
+    build: ./fptp-backend-api
+    container_name: fptp-backend-api
+    depends_on:
+      - fptp_mysql_server
+      - fptp_keycloack_server
+    ports:
+      - 4003:8080
+    networks:
+      - fptp-networks
+    environment:
+      DB_URL: jdbc:mysql://fptp_mysql_server:3306/fptp
+      DB_USER: root
+      DB_PASSWORD: fptp12345
+      JWT_ISSUER_URI: http://localhost:4001/realms/fptp
+      JWT_CONFIG_URI: http://fptp_keycloack_server:8080/realms/fptp
+      CORS_ALLOWED_ORIGINS: http://localhost:4200,http://localhost:4002
+    restart: unless-stopped
+
+  fptp-client-app:
+    build: ./first-park-then-pay
+    container_name: fptp-client-app
+    depends_on:
+      - fptp_mysql_server
+      - fptp_keycloack_server
+      - fptp-backend-api
+    ports:
+      - 4002:80
+    networks:
+      - fptp-networks
+    restart: unless-stopped
     
     

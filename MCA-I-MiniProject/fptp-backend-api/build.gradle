@@ -31,8 +31,8 @@ dependencies {
 
     // --- Security (for validating Keycloak tokens) ---
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'com.auth0:java-jwt:4.4.0'
+    implementation 'com.auth0:jwks-rsa:0.22.1'
 
     compileOnly("org.projectlombok:lombok:1.18.42")
     annotationProcessor("org.projectlombok:lombok:1.18.42")
