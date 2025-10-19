@@ -1,9 +1,6 @@
 package com.fptp.api.controller;
 
-import com.fptp.api.models.ApiResponse;
-import com.fptp.api.models.CommonResult;
-import com.fptp.api.models.PaginationResult;
-import com.fptp.api.models.VehicleTypes;
+import com.fptp.api.models.*;
 import com.fptp.api.services.VehicleServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,9 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -78,6 +73,32 @@ public class VehicleController {
 
         // Return 200 OK with data
         ApiResponse<PaginationResult<VehicleTypes>> response = new ApiResponse<PaginationResult<VehicleTypes>>(true, "Vehicle types fetched successfully", paginationResult);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/GetVehicleTypeSummary")
+    @Operation(summary = "Get a vehicle type summary")
+    public ResponseEntity<ApiResponse<PaginationResult<VehicleTypeSummary>>> GetVehicleTypeSummary(
+            @RequestParam int pageNo,
+            @RequestParam int pageSize,
+            @RequestParam(required = false) String filterName,
+            @RequestParam String ownerId) {
+
+        if (ownerId == null || ownerId.isBlank()) {
+            ApiResponse<PaginationResult<VehicleTypeSummary>> response = new ApiResponse<PaginationResult<VehicleTypeSummary>>(false, "Owner id is mandatory", null);
+            return ResponseEntity.status(400).body(response);
+        }
+
+        PaginationResult<VehicleTypeSummary> paginationResult = vehicleServices.GetVehicleTypeSummary(pageNo,pageSize,filterName,ownerId);
+
+        if (paginationResult == null || paginationResult.getData().isEmpty()) {
+            // Return 404 Not Found
+            ApiResponse<PaginationResult<VehicleTypeSummary>> response = new ApiResponse<PaginationResult<VehicleTypeSummary>>(false, "No vehicle types summary found", null);
+            return ResponseEntity.status(404).body(response);
+        }
+
+        // Return 200 OK with data
+        ApiResponse<PaginationResult<VehicleTypeSummary>> response = new ApiResponse<PaginationResult<VehicleTypeSummary>>(true, "Vehicle types summary fetched successfully", paginationResult);
         return ResponseEntity.ok(response);
     }
 

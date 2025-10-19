@@ -5,7 +5,7 @@
     cursor: pointer;
 }
 
-.app-logo{
+.app-logo {
     font-size: 1.5rem;
     background-color: #fd7e14;
     padding: 1rem 7rem;
@@ -35,13 +35,22 @@
     padding: 1rem;
     text-align: center;
     border-radius: 100%;
+
     .user-image-text {
         margin-top: .2rem;
         font-size: 1.5rem;
     }
 }
-.user-info-email{
-    .user-name-view{
+
+.user-info-email {
+    .user-name-view {
         font-size: 1.3rem;
     }
+}
+
+.side-action-icon-img {
+    height: 25px;
+    width: 25px;
+    cursor: pointer;
+    margin-left:2rem;
 }

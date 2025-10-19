@@ -18,6 +18,8 @@ import { Toast } from "primeng/toast";
 import { Dialog } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
+import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
+import { Storage } from '../../core/utilities/storage';
 
 @Component({
   selector: 'app-vehicles',
@@ -34,7 +36,6 @@ import { DatePickerModule } from 'primeng/datepicker';
     Toast,
     Dialog,
     ButtonModule,
-    InputTextModule,
     ReactiveFormsModule,
     CommonModule,
     DatePickerModule
@@ -42,11 +43,11 @@ import { DatePickerModule } from 'primeng/datepicker';
   templateUrl: './vehicles.html',
   styleUrl: './vehicles.scss',
   standalone: true,
-  providers: [VehicleService, ConfirmationService]
+  providers: [VehicleService, ConfirmationService, Storage]
 })
 export class Vehicles implements OnInit {
 
-  private _ownerId: number = 1;
+  private _ownerId: string = '';
   private destroy$ = new Subject<void>();
   private _filterName: string = '';
   private _filterDate: string = '';
@@ -69,10 +70,12 @@ export class Vehicles implements OnInit {
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private fb: FormBuilder,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private storageService: Storage
   ) { }
 
   public ngOnInit(): void {
+    this._ownerId = this.storageService.getOwnerId();
     this.getVehicleTableRecords();
     this.defaultFormLoad();
 
@@ -123,7 +126,7 @@ export class Vehicles implements OnInit {
     this.filterSubject$.next(filters);
   }
 
-  onFilterChange(field: 'name' | 'modifiedDate', value: any): void {
+  public onFilterChange(field: 'name' | 'modifiedDate', value: any): void {
     if (field === 'name') {
       const trimmed = value?.trim() || '';
       this._filterName = trimmed.length > 0 ? trimmed : '';
@@ -257,6 +260,11 @@ export class Vehicles implements OnInit {
           data: [],
           totalRecords: 0
         };
+
+        this.cdr.markForCheck();
+        if (err as HttpErrorResponse && err.status == HttpStatusCode.NotFound as number)
+          return;
+
         throw err
       }
     });

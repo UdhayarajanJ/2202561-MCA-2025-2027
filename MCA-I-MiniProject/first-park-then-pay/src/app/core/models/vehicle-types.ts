@@ -10,3 +10,11 @@ export interface VehicleTypes {
     createdDate:Date,
     modifiedDate:Date
 }
+
+export interface VehicleTypeSummary{
+    name:string,
+    totalSlots:number,
+    availableSlots:number,
+    reservedSlots:number,
+    isEnabled:boolean
+}
