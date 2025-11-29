@@ -13,11 +13,13 @@ RUN ./gradlew dependencies --no-daemon || true
 # Copy application source
 COPY . .
 
+
+RUN chmod +x gradlew
 # Build the JAR (skip tests for faster CI/CD)
-RUN ./gradlew clean build -x test --no-daemon
+RUN ./gradlew build
 
 # ---- Stage 2: Run the application ----
-FROM openjdk:21-jdk-slim
+FROM openjdk:21-ea-21-jdk-slim
 
 WORKDIR /app
 
