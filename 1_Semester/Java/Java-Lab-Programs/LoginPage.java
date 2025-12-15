@@ -1,76 +1,54 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
-public class LoginPage {
+public class LoginPage extends JFrame implements ActionListener {
+
+    JLabel lblUser, lblPass;
+    JTextField txtUser;
+    JPasswordField txtPass;
+    JButton btnLogin;
+
+    public LoginPage() {
+
+        setTitle("Login Page");
+        setSize(350, 200);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new GridLayout(3, 2, 10, 10));
+
+        lblUser = new JLabel("Username:");
+        lblPass = new JLabel("Password:");
+
+        txtUser = new JTextField();
+        txtPass = new JPasswordField();
+
+        btnLogin = new JButton("Login");
+        btnLogin.addActionListener(this);
+
+        add(lblUser);
+        add(txtUser);
+        add(lblPass);
+        add(txtPass);
+        add(new JLabel());   // empty cell
+        add(btnLogin);
+
+        setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String user = txtUser.getText();
+        String pass = new String(txtPass.getPassword());
+
+        // Simple validation (You can change)
+        if (user.equals("admin") && pass.equals("1234")) {
+            JOptionPane.showMessageDialog(this, "Login Successful!");
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid Username or Password");
+        }
+    }
 
     public static void main(String[] args) {
-
-        JFrame frame = new JFrame("Login Page");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 400);
-        frame.setLocationRelativeTo(null); // Center on screen
-        frame.setLayout(new GridBagLayout());
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 8, 8, 8); // Spacing
-        gbc.anchor = GridBagConstraints.WEST; // Left-align labels
-
-        // Title
-        JLabel title = new JLabel("Login Form");
-        title.setFont(new Font("Arial", Font.BOLD, 20));
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.WEST;
-        frame.add(title, gbc);
-
-        // Reset anchor for left alignment
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.gridwidth = 1;
-
-        // Username Label
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        frame.add(new JLabel("Username : "), gbc);
-
-        // Username Field
-        JTextField txtUser = new JTextField(18);
-        gbc.gridx = 1;
-        frame.add(txtUser, gbc);
-
-        // Password Label
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        frame.add(new JLabel("Password : "), gbc);
-
-        // Password Field
-        JPasswordField txtPass = new JPasswordField(18);
-        gbc.gridx = 1;
-        frame.add(txtPass, gbc);
-
-        // Login Button (same width as text fields)
-        JButton btnLogin = new JButton("Login");
-
-        // Force button width equal to textfield
-        btnLogin.setPreferredSize(txtUser.getPreferredSize());
-
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 5;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        frame.add(btnLogin, gbc);
-
-        btnLogin.addActionListener(e -> {
-            String user = txtUser.getText();
-            String pass = new String(txtPass.getPassword());
-
-            if (user.equals("admin") && pass.equals("123")) {
-                JOptionPane.showMessageDialog(frame, "Login Successful !", "Message", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(frame, "Login Failed !", "Message", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-        frame.setVisible(true);
+        new LoginPage();
     }
 }
