@@ -21,11 +21,28 @@ class CourseManager:
 
 
 cm = CourseManager()
+continueAgain = True
 
-c = input("Enter course to add: ")
-cm.add_course(c)
+while continueAgain:
+    print(
+        """
+1. Add Course
+2. Delete Cource
+3. Show Courses
+    """
+    )
+    choice = int(input("Enter your choice :"))
+    match choice:
+        case 1:
+            c = input("Enter course to add: ")
+            cm.add_course(c)
+        case 2:
+            d = input("Enter course to delete: ")
+            cm.delete_course(d)
+        case 3:
+            cm.show_courses()
+        case _:
+            print("Invalid choice")
 
-d = input("Enter course to delete: ")
-cm.delete_course(d)
-
-cm.show_courses()
+    doAgain = int(input("To you want to continue press 1 : "))
+    continueAgain = doAgain == 1
