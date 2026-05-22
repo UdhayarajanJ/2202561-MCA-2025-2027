@@ -62,7 +62,7 @@ public class DoublyLinkedList {
         } else {
 
             Node temp = head;
-
+            
             System.out.println("Doubly Linked List Elements:");
 
             while (temp != null) {

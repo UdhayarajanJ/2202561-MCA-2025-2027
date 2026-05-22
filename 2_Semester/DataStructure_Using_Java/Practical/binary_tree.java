@@ -68,14 +68,14 @@ public class binary_tree {
         Scanner sc = new Scanner(System.in);
         binary_tree tree = new binary_tree();
 
-        System.out.print("Enter number of nodes: ");
-        int n = sc.nextInt();
+        // System.out.print("Enter number of nodes: ");
+        // int n = sc.nextInt();
 
-        System.out.println("Enter node values:");
+        // System.out.println("Enter node values:");
+        int[] arr = new int[] { 45, 15, 79, 90, 10, 55, 12, 20, 50 };
 
-        for (int i = 0; i < n; i++) {
-            int value = sc.nextInt();
-            tree.insert(value);
+        for (int i = 0; i < arr.length; i++) {
+            tree.insert(arr[i]);
         }
 
         System.out.print("Inorder Traversal: ");
